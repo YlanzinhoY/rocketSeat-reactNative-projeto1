@@ -2,30 +2,39 @@ import { Text, View, Linking, TextInput, TouchableOpacity, FlatList, Alert} from
 import { styles } from "./style";
 
 import { Participant } from "../../components/Participant";
+import { useState } from "react";
 
 export function Home(){
-    const participants = ["Javascript", "java", "ruby", "php", "python", "kotlin", "lua", "elixir"]
+    const [participants, setParticipants] = useState<string[]>([])
+    const [participantName, setParticipantName] = useState<string>('')
 
     function handleParticipantAdd() {
-        if(participants.includes("Javascript")){
-            return Alert.alert("lang existente!", "Não é possivel add a mesma lang")
+        if(participants.includes(participantName)){
+            return Alert.alert("lang existente!", "Não é possivel add a mesma linguagem")
+        } if(participantName.length == 0) {
+            return Alert.alert("Não pode colocar conteudo vazio")
+        } if( participantName.length > 0) {
+            setParticipantName('')
+            return setParticipants(prevState => [...prevState, participantName])
         }
     }
-
+    
     function handleRemoveParticipant(name: string){
         Alert.alert(
             "Deseja remover?", 
             `Tem certeza que deseja remover ${name}?`, [
                 {
                     text: 'Sim',
-                    onPress: () => Alert.alert("Deletado!")
+                    onPress: () => setParticipants(prevState => 
+                        prevState.filter(participant => participant !== name
+                        ))
                 },
                 {
                     text: 'Não',
                     style: 'cancel'
                 }
             ])
-    }
+}
 
   return(
     <View style={styles.container}>
@@ -40,6 +49,8 @@ export function Home(){
             placeholder="Nome da linguagem"
             style={styles.input}
             placeholderTextColor='#ffff'
+            onChangeText={setParticipantName}
+            value={participantName}       
             >
             </TextInput>
             <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
@@ -63,10 +74,7 @@ export function Home(){
                 </Text>
             )}
         />
-
     </View>
-
-    
   )
 }
 

@@ -1,6 +1,4 @@
-
 import { Text, View, TouchableOpacity } from "react-native";
-
 import { styles } from "./style";
 
 type Props = {
